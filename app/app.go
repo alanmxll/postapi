@@ -7,7 +7,14 @@ type App struct {
 }
 
 func New() *App {
-	return &App{
+	a := &App{
 		Router: mux.NewRouter(),
 	}
+
+	a.initRoutes()
+	return a
+}
+
+func (a *App) initRoutes() {
+	a.Router.HandleFunc("/", a.IndexHandler()).Methods("GET")
 }
