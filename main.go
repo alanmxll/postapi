@@ -7,6 +7,7 @@ import (
 
 	"github.com/alanmxll/postapi/app"
 	"github.com/alanmxll/postapi/app/database"
+	_ "github.com/lib/pq"
 )
 
 func main() {
