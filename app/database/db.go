@@ -3,12 +3,15 @@ package database
 import (
 	"log"
 
+	"github.com/alanmxll/postapi/app/models"
 	"github.com/jmoiron/sqlx"
 )
 
 type PostDB interface {
 	Open() error
 	Close() error
+	CreatePost(p *models.Post) error
+	GetPosts() ([]*models.Post, error)
 }
 
 type DB struct {
