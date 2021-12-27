@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/alanmxll/postapi/app/models"
 )
@@ -60,5 +61,45 @@ func (a *App) GetPostsHandler() http.HandlerFunc {
 		}
 
 		sendResponse(w, r, resp, http.StatusOK)
+	}
+}
+
+func (a *App) UpdatePostHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idParam := r.URL.Query().Get("id")
+
+		if idParam != "" {
+			req := models.PostRequest{}
+			err := parse(w, r, &req)
+			if err != nil {
+				log.Printf("Cannot parse post body. err=%v \n", err)
+				sendResponse(w, r, nil, http.StatusBadRequest)
+				return
+			}
+
+			intIdParam, err := strconv.ParseInt(idParam, 10, 64)
+			if err != nil {
+				log.Printf("Cannot update post. err=%v\n", err)
+			}
+
+			// Update the post
+			p := &models.Post{
+				ID:      intIdParam,
+				Title:   req.Title,
+				Content: req.Content,
+				Author:  req.Author,
+			}
+
+			// Save in DB
+			err = a.DB.UpdatePost(p)
+			if err != nil {
+				log.Printf("Cannot update post in DB. err=%v\n", err)
+				sendResponse(w, r, nil, http.StatusInternalServerError)
+				return
+			}
+
+			resp := mapPostToJson(p)
+			sendResponse(w, r, resp, http.StatusOK)
+		}
 	}
 }

@@ -23,4 +23,5 @@ func (a *App) initRoutes() {
 	a.Router.HandleFunc("/", a.IndexHandler()).Methods("GET")
 	a.Router.HandleFunc("/api/posts", a.CreatePostHandler()).Methods("POST")
 	a.Router.HandleFunc("/api/posts", a.GetPostsHandler()).Methods("GET")
+	a.Router.HandleFunc("/api/posts", a.UpdatePostHandler()).Methods("PUT")
 }

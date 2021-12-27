@@ -22,3 +22,13 @@ func (d *DB) GetPosts() ([]*models.Post, error) {
 
 	return posts, nil
 }
+
+func (d *DB) UpdatePost(p *models.Post) error {
+	res, err := d.db.Exec(updatePostSchema, p.ID, p.Title, p.Content, p.Author)
+	if err != nil {
+		return err
+	}
+
+	res.RowsAffected()
+	return err
+}
