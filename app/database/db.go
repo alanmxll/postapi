@@ -13,6 +13,7 @@ type PostDB interface {
 	CreatePost(p *models.Post) error
 	GetPosts() ([]*models.Post, error)
 	UpdatePost(p *models.Post) error
+	DeletePost(ID *int64) error
 }
 
 type DB struct {

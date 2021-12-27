@@ -103,3 +103,35 @@ func (a *App) UpdatePostHandler() http.HandlerFunc {
 		}
 	}
 }
+
+func (a *App) DeletePostHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		idParam := r.URL.Query().Get("id")
+
+		if idParam != "" {
+			req := models.PostRequest{}
+			err := parse(w, r, &req)
+			if err != nil {
+				log.Printf("Cannot parse post body. err=%v \n", err)
+				sendResponse(w, r, nil, http.StatusBadRequest)
+				return
+			}
+
+			intIdParam, err := strconv.ParseInt(idParam, 10, 64)
+			if err != nil {
+				log.Printf("Cannot delete post. err=%v\n", err)
+				return
+			}
+
+			err = a.DB.DeletePost(&intIdParam)
+			if err != nil {
+				log.Printf("Cannot delete post in DB. err=%v\n", err)
+				sendResponse(w, r, nil, http.StatusInternalServerError)
+				return
+			}
+
+			sendResponse(w, r, nil, http.StatusOK)
+		}
+	}
+}

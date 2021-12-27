@@ -32,3 +32,13 @@ func (d *DB) UpdatePost(p *models.Post) error {
 	res.RowsAffected()
 	return err
 }
+
+func (d *DB) DeletePost(ID *int64) error {
+	res, err := d.db.Exec(deletePostSchema, ID)
+	if err != nil {
+		return err
+	}
+
+	res.RowsAffected()
+	return err
+}
